@@ -18,16 +18,10 @@ export default function Post() {
   const messageRef = useRef(null);
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-
     (async () => {
       try {
         const res = await fetch(
-          `https://zishan-blog-api.adaptable.app/posts/${id}`,
-          {
-            signal,
-          }
+          `https://zishan-blog-api.adaptable.app/posts/${id}`
         );
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
@@ -40,23 +34,13 @@ export default function Post() {
         }
       }
     })();
-
-    return () => {
-      abortController.abort();
-    };
-  }, [id]);
+  }, []);
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-
     (async () => {
       try {
         const res = await fetch(
-          `https://zishan-blog-api.adaptable.app/posts/${id}/comments`,
-          {
-            signal,
-          }
+          `https://zishan-blog-api.adaptable.app/posts/${id}/comments`
         );
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
@@ -69,11 +53,7 @@ export default function Post() {
         }
       }
     })();
-
-    return () => {
-      abortController.abort();
-    };
-  }, [id]);
+  }, []);
 
   async function addComment() {
     let data = {
@@ -135,7 +115,12 @@ export default function Post() {
       <Nav styles={styles} />
       <div className={styles.blogDetail}>Blog Details</div>
       {post === null ? (
-        <p>Loading...</p>
+        <div className={styles.loader} style={{ justifySelf: "center" }}>
+          <div className={styles.circle}></div>
+          <div className={styles.circle}></div>
+          <div className={styles.circle}></div>
+          <div className={styles.circle}></div>
+        </div>
       ) : (
         <>
           <div className={styles.post}>

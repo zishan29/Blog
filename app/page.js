@@ -8,37 +8,30 @@ import Nav from "./nav";
 export default function Home() {
   const [posts, setPosts] = useState(null);
   useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-
     (async () => {
       try {
-        const res = await fetch(`https://zishan-blog-api.adaptable.app/posts`, {
-          signal,
-        });
+        const res = await fetch(`https://zishan-blog-api.adaptable.app/posts`);
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
         }
         const data = await res.json();
         setPosts(data.posts);
       } catch (error) {
-        if (error) {
-          console.log(error);
+        if (error.name === "AbortError") {
+          console.log("Request aborted");
+        } else {
+          console.log("Network or other error:", error.message);
         }
       }
     })();
-
-    return () => {
-      abortController.abort();
-    };
   }, []);
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString("en-US", {
-      month: "short", // Short month name (e.g., Jan)
-      day: "numeric", // Numeric day (e.g., 30)
-      year: "numeric", // Full year (e.g., 2021)
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     });
   };
 
@@ -66,9 +59,14 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div>
+      <div style={{ display: "grid" }}>
         {posts === null ? (
-          <p>Loading...</p>
+          <div className={styles.loader} style={{ justifySelf: "center" }}>
+            <div className={styles.circle}></div>
+            <div className={styles.circle}></div>
+            <div className={styles.circle}></div>
+            <div className={styles.circle}></div>
+          </div>
         ) : Array.isArray(posts) && posts.length > 0 ? (
           <div className={styles.cards}>
             <div
