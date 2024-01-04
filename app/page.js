@@ -152,7 +152,9 @@ export default function Home() {
             ))}
           </div>
         ) : (
-          <p>No posts available</p>
+          <p style={{ justifySelf: "center", marginTop: "50px" }}>
+            No posts available
+          </p>
         )}
       </div>
     </main>
