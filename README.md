@@ -1,9 +1,9 @@
 # Blog
 
-[Live Preview](https://blog-bice-tau-13.vercel.app/)  
-Link to the [API](https://github.com/zishan29/Blog-API)
-
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+[Live Preview](https://blog-bice-tau-13.vercel.app/)  
+[API Used](https://github.com/zishan29/Blog-API)
 
 ## Getting Started
 
