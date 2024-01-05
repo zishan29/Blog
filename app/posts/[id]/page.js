@@ -12,6 +12,7 @@ export default function Post() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState([]);
 
   const nameRef = useRef(null);
   const emailRef = useRef(null);
@@ -55,13 +56,7 @@ export default function Post() {
     })();
   }, []);
 
-  async function addComment() {
-    let data = {
-      username: name,
-      email: email,
-      comment: message,
-      postId: id,
-    };
+  async function addComment(data) {
     try {
       const res = await fetch(
         `https://zishan-blog-api.adaptable.app/posts/${id}/comments`,
@@ -73,32 +68,60 @@ export default function Post() {
           },
         }
       );
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-      const responseData = await res.json();
 
+      if (!res.ok) {
+        if (res.status === 400) {
+          const errorData = await res.json();
+          setErrors(errorData.err.errors);
+        } else {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+      } else {
+        return true;
+      }
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  async function fetchUpdatedComments() {
+    try {
       const commentsRes = await fetch(
         `https://zishan-blog-api.adaptable.app/posts/${id}/comments`
       );
+
       if (!commentsRes.ok) {
         throw new Error(`HTTP error! Status: ${commentsRes.status}`);
       }
+
       const updatedComments = await commentsRes.json();
       setComments(updatedComments.comments);
-
-      setName("");
-      setEmail("");
-      setMessage("");
-
-      nameRef.current.value = "";
-      emailRef.current.value = "";
-      messageRef.current.value = "";
+      setErrors([]);
     } catch (error) {
-      if (error) {
-        console.log(error);
-      }
+      console.log(error);
     }
+  }
+
+  async function handleCommentSubmission() {
+    let data = {
+      username: name,
+      email: email,
+      comment: message,
+      postId: id,
+    };
+
+    const commentAdded = await addComment(data);
+    if (commentAdded) {
+      await fetchUpdatedComments();
+    }
+
+    setName("");
+    setEmail("");
+    setMessage("");
+    nameRef.current.value = "";
+    emailRef.current.value = "";
+    messageRef.current.value = "";
   }
 
   const formatDate = (timestamp) => {
@@ -184,6 +207,12 @@ export default function Post() {
                 ref={emailRef}
                 onChange={(e) => setEmail(e.target.value)}
               ></input>
+              {errors.username && <p>{errors.username.message}</p>}
+              {errors.email && (
+                <p style={{ gridColumn: "2 / -1", gridRow: "3 / 4" }}>
+                  {errors.email.message}
+                </p>
+              )}
               <label htmlFor="message" style={{ gridColumn: "1 / -1" }}>
                 MESSAGE *
               </label>
@@ -196,7 +225,10 @@ export default function Post() {
                 style={{ gridColumn: "1 / -1" }}
                 rows="15"
               ></textarea>
-              <button type="button" onClick={() => addComment()}>
+              {errors.comment && (
+                <p style={{ gridColumn: "1 / -1" }}>{errors.comment.message}</p>
+              )}
+              <button type="button" onClick={() => handleCommentSubmission()}>
                 POST COMMENT
               </button>
             </form>

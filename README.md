@@ -8,6 +8,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 [CMS](https://github.com/zishan29/blog-cms)
 
+[CMS Live](https://blog-cms-puce.vercel.app/)
+
 ## Getting Started
 
 First, run the development server:
