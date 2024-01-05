@@ -2,8 +2,11 @@
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-[Live Preview](https://blog-bice-tau-13.vercel.app/)  
-[API Used](https://github.com/zishan29/Blog-API)
+[Live Preview](https://blog-bice-tau-13.vercel.app/)
+
+[API](https://github.com/zishan29/Blog-API)
+
+[CMS](https://github.com/zishan29/blog-cms)
 
 ## Getting Started
 
